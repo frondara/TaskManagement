@@ -1,9 +1,20 @@
 package com.frondara.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.frondara.dto.CountType;
 import com.frondara.entity.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long>{
+	
+	@Query(value= "Select * from task order by due_date desc", nativeQuery = true)
+	public List<Task> getAllTaskDueDateDesc();
+	
+	@Query(value= "Select new com.frondara.dto.CountType(COUNT(*)/(select count(*) from Task) * 100,type) from Task GROUP BY type")
+	public List<CountType> getPercentageGroupByType();
+	
 
 }
